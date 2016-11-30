@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="urn:xml.candies"
+        xmlns:tns="urn:xml.candies"
+        elementFormDefault="qualified">
+
+    <element name="candy" type="tns:Candy" />
+    <element name="chocolate" type="tns:Chocolate" substitutionGroup="tns:candy"/>
+
+    <element name="candies">
+        <complexType>
+            <choice minOccurs="1" maxOccurs="unbounded">
+                <element ref="tns:candy" />
+            </choice>
+        </complexType>
+    </element>
+
+    <complexType name="Candy">
+        <sequence>
+            <element name="name" type="string" />
+            <element name="energy" type="positiveInteger" />
+            <element name="ingredients" type="tns:Ingredients" />
+            <element name="value" type="tns:Value" />
+            <element name="production" type="string" />
+        </sequence>
+        <attribute name="id" use="required">
+            <simpleType>
+                <restriction base ="ID">
+                    <pattern value="[A-Z]{3}[0-9]{5}"></pattern>
+                </restriction>
+            </simpleType>
+        </attribute>
+        <attribute name="type" use="optional" default="chocolate">
+            <simpleType>
+                <restriction base ="string">
+                    <enumeration value="caramel"></enumeration>
+                    <enumeration value="iris"></enumeration>
+                    <enumeration value="chocolate"></enumeration>
+                </restriction>
+            </simpleType>
+        </attribute>
+    </complexType>
+
+    <complexType name="Ingredients">
+        <sequence>
+            <element name="water" type="positiveInteger" />
+            <element name="sugar" type="positiveInteger" />
+            <element name="fructose" type="positiveInteger" />
+            <element name="vanilin" type="positiveInteger" />
+        </sequence>
+    </complexType>
+
+    <complexType name="Value">
+        <sequence>
+            <element name="proteins" type="positiveInteger" />
+            <element name="fats" type="positiveInteger" />
+            <element name="carbonhydrates"  type="positiveInteger" />
+        </sequence>
+    </complexType>
+
+    <complexType name="Chocolate">
+        <complexContent>
+            <extension base="tns:Candy">
+                <sequence>
+                    <element name ="percent">
+                        <simpleType>
+                            <restriction base="positiveInteger">
+                                <maxInclusive value="100"></maxInclusive>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element name="additives" type="tns:Additives" />
+                </sequence>
+                <attribute name="kind" use="optional" >
+                    <simpleType>
+                        <restriction base ="string">
+                            <enumeration value="milk"></enumeration>
+                            <enumeration value="white"></enumeration>
+                            <enumeration value="bitter"></enumeration>
+                        </restriction>
+                    </simpleType>
+                </attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="Additives">
+        <choice minOccurs="0" maxOccurs="unbounded">
+            <element name="raisin" type="int" default="0" />
+            <element name="hazelnut" type="int" default="0" />
+            <element name="cookies" type="int" default="0" />
+        </choice>
+    </complexType>
+
+</schema>
